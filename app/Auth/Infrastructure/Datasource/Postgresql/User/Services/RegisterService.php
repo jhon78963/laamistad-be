@@ -2,12 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\Auth\Infrastructure\Datasource\Postgresql\Services;
+namespace App\Auth\Infrastructure\Datasource\Postgresql\User\Services;
 
-use App\Auth\Domain\Entities\Register;
+use App\Auth\Domain\Entities\User as DomainUser;
 use App\Auth\Infrastructure\Datasource\Services\ModelService;
 use App\Auth\Infrastructure\Models\User;
-use Hash;
 
 final class RegisterService
 {
@@ -18,13 +17,13 @@ final class RegisterService
         $this->modelService = $modelService;
     }
 
-    public function user(Register $register): User
+    public function user(DomainUser $domainUser): User
     {
         $data = [
-            'email' => $register->email,
-            'password' => Hash::make($register->password),
-            'headquarter_id' => $register->headquarterId,
-            'user_type_id' => $register->userTypeId,
+            'id' => $domainUser->id->value,
+            'name' => $domainUser->name,
+            'email' => $domainUser->email->value,
+            'password' => $domainUser->getHashedPassword(),
         ];
 
         return $this->modelService->create(new User(), $data);

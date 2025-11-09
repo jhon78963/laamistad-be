@@ -4,35 +4,46 @@ declare(strict_types=1);
 
 namespace App\Auth\Application\UseCases;
 
+use App\Auth\Application\Contracts\PasswordHasher;
 use App\Auth\Application\DTO\RegisterDto;
 use App\Auth\Domain\Entities\Register;
-use App\Auth\Domain\Repositories\IAuthRepository;
+use App\Auth\Domain\Entities\User;
+use App\Auth\Domain\Exceptions\UserAlreadyExistsException;
+use App\Auth\Domain\Repositories\IUserRepository;
+use App\Auth\Domain\ValueObjects\Email;
+use App\Auth\Domain\ValueObjects\HashedPassword;
 
 final class RegisterUseCase
 {
-    private IAuthRepository $iAuthRepository;
+    private IUserRepository $iUserRepository;
+    private readonly PasswordHasher $passwordHasher;
 
-    public function __construct(IAuthRepository $iAuthRepository)
-    {
-        $this->iAuthRepository = $iAuthRepository;
+    public function __construct(
+        IUserRepository $iUserRepository,
+        PasswordHasher $passwordHasher
+    ) {
+        $this->iUserRepository = $iUserRepository;
+        $this->passwordHasher = $passwordHasher;
     }
 
-    public function execute(RegisterDto $registerDto): array
+    public function execute(RegisterDto $data): array
     {
-        $user = new Register(
-            $registerDto->firstName,
-            $registerDto->otherNames,
-            $registerDto->fatherSurname,
-            $registerDto->motherSurname,
-            $registerDto->cellphoneCodeId,
-            $registerDto->cellphoneNumber,
-            $registerDto->documentTypeId,
-            $registerDto->documentNumber,
-            $registerDto->email,
-            $registerDto->password,
-            $registerDto->headquarterId,
-            $registerDto->userTypeId,
+        $email = new Email($data->email);
+        if ($this->iUserRepository->findByEmail($email)) {
+            throw new UserAlreadyExistsException();
+        }
+
+        $hashedPassword = new HashedPassword(
+            $this->passwordHasher->hash($data->password)
         );
-        return $this->iAuthRepository->register($user);
+
+        $user = User::create(
+            $this->iUserRepository->nextIdentity(),
+            $data->name,
+            $email,
+            $hashedPassword
+        );
+
+        return $this->iUserRepository->save($user);
     }
 }

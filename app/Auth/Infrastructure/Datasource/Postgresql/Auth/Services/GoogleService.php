@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Auth\Infrastructure\Datasource\Postgresql\Services;
+namespace App\Auth\Infrastructure\Datasource\Postgresql\Auth\Services;
 
 use App\Auth\Infrastructure\Models\User;
 use Google_Client;

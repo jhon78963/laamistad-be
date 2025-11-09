@@ -12,13 +12,13 @@ return new class extends Migration {
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
             $table->datetime('creation_time')->default(DB::raw('CURRENT_TIMESTAMP'));
-            $table->integer('creator_user_id')->nullable();
+            $table->uuid('creator_user_id')->nullable();
             $table->datetime('last_modification_time')->nullable();
-            $table->integer('last_modifier_user_id')->nullable();
+            $table->uuid('last_modifier_user_id')->nullable();
             $table->boolean('is_deleted')->default(false);
-            $table->integer('deleter_user_id')->nullable();
+            $table->uuid('deleter_user_id')->nullable();
             $table->datetime('deletion_time')->nullable();
             $table->string('email')->unique();
             $table->string('password');
@@ -31,11 +31,11 @@ return new class extends Migration {
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
             $table->datetime('creation_time')->default(DB::raw('CURRENT_TIMESTAMP'));
-            $table->integer('creator_user_id')->nullable();
+            $table->uuid('creator_user_id')->nullable();
             $table->datetime('last_modification_time')->nullable();
-            $table->integer('last_modifier_user_id')->nullable();
+            $table->uuid('last_modifier_user_id')->nullable();
             $table->boolean('is_deleted')->default(false);
-            $table->integer('deleter_user_id')->nullable();
+            $table->uuid('deleter_user_id')->nullable();
             $table->datetime('deletion_time')->nullable();
             $table->string('email');
             $table->string('token');

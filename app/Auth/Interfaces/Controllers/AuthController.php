@@ -13,6 +13,7 @@ use App\Auth\Application\UseCases\LoginUseCase;
 use App\Auth\Application\UseCases\LogoutUseCase;
 use App\Auth\Application\UseCases\RefreshTokenUseCase;
 use App\Auth\Application\UseCases\RegisterUseCase;
+use App\Auth\Domain\Exceptions\UserAlreadyExistsException;
 use App\Auth\Interfaces\Controllers\Controller;
 use App\Auth\Interfaces\Requests\GoogleLoginRequest;
 use App\Auth\Interfaces\Requests\LoginRequest;
@@ -111,6 +112,8 @@ final class AuthController extends Controller
             $register = $this->registerUseCase->execute($registerDto);
             DB::commit();
             return response()->json($register, 201);
+        } catch (UserAlreadyExistsException $e) {
+            return response()->json($e->getMessage(), 422);
         } catch (\Exception $e) {
             DB::rollback();
             return response()->json($e->getMessage(), 500);

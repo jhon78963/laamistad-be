@@ -7,7 +7,6 @@ namespace App\Auth\Domain\Repositories;
 use App\Auth\Domain\Entities\Login;
 use App\Auth\Domain\Entities\Logout;
 use App\Auth\Domain\Entities\RefreshToken;
-use App\Auth\Domain\Entities\Register;
 
 interface IAuthRepository
 {
@@ -15,5 +14,4 @@ interface IAuthRepository
     public function login(Login $login): array;
     public function logout(Logout $logout): void;
     public function refreshToken(RefreshToken $refreshToken): array;
-    public function register(Register $register): array;
 }

@@ -2,18 +2,16 @@
 
 declare(strict_types=1);
 
-namespace App\Auth\Infrastructure\Datasource\Postgresql;
+namespace App\Auth\Infrastructure\Datasource\Postgresql\Auth;
 
 use App\Auth\Domain\Entities\Login;
 use App\Auth\Domain\Entities\Logout;
 use App\Auth\Domain\Entities\RefreshToken;
-use App\Auth\Domain\Entities\Register;
 use App\Auth\Infrastructure\Datasource\IAuthDatasource;
-use App\Auth\Infrastructure\Datasource\Postgresql\Services\GoogleService;
-use App\Auth\Infrastructure\Datasource\Postgresql\Services\LoginService;
-use App\Auth\Infrastructure\Datasource\Postgresql\Services\LogoutService;
-use App\Auth\Infrastructure\Datasource\Postgresql\Services\RegisterService;
-use App\Auth\Infrastructure\Datasource\Postgresql\Services\RefreshTokenService;
+use App\Auth\Infrastructure\Datasource\Postgresql\Auth\Services\GoogleService;
+use App\Auth\Infrastructure\Datasource\Postgresql\Auth\Services\LoginService;
+use App\Auth\Infrastructure\Datasource\Postgresql\Auth\Services\LogoutService;
+use App\Auth\Infrastructure\Datasource\Postgresql\Auth\Services\RefreshTokenService;
 use App\Auth\Infrastructure\Datasource\Services\ResponseService;
 
 final class AuthDatasource implements IAuthDatasource
@@ -22,7 +20,6 @@ final class AuthDatasource implements IAuthDatasource
     protected LoginService $loginService;
     protected LogoutService $logoutService;
     protected RefreshTokenService $refreshTokenService;
-    protected RegisterService $registerService;
     protected ResponseService $responseService;
 
     public function __construct(
@@ -30,7 +27,6 @@ final class AuthDatasource implements IAuthDatasource
         LoginService $loginService,
         LogoutService $logoutService,
         RefreshTokenService $refreshTokenService,
-        RegisterService $registerService,
         ResponseService $responseService
     ) {
         $this->googleService = $googleService;
@@ -38,7 +34,6 @@ final class AuthDatasource implements IAuthDatasource
         $this->loginService = $loginService;
         $this->logoutService = $logoutService;
         $this->refreshTokenService = $refreshTokenService;
-        $this->registerService = $registerService;
         $this->responseService = $responseService;
     }
 
@@ -82,11 +77,5 @@ final class AuthDatasource implements IAuthDatasource
             $accessToken,
             $refreshToken,
         );
-    }
-
-    public function register(Register $register): array
-    {
-        $user = $this->registerService->user($register);
-        return $this->responseService->generateAccessTokenResponse($user);
     }
 }

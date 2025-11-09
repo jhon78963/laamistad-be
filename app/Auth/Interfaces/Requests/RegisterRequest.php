@@ -24,18 +24,9 @@ final class RegisterRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'firstName' => 'required|string',
-            'otherNames' => 'required|string',
-            'fatherSurname' => 'required|string',
-            'motherSurname' => 'required|string',
-            'cellphoneCodeId' => 'required|integer',
-            'cellphoneNumber' => 'required|string',
-            'documentTypeId' => 'required|integer',
-            'documentNumber' => 'required|string|unique:general_profiles,document_number',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|string|min:8',
-            'headquarterId' => 'required|integer',
-            'userTypeId' => 'required|integer',
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
         ];
     }
 }

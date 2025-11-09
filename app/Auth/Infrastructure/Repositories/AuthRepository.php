@@ -39,9 +39,4 @@ final class AuthRepository implements IAuthRepository
     {
         return $this->iAuthDatasource->refreshToken($refreshToken);
     }
-
-    public function register(Register $register): array
-    {
-        return $this->iAuthDatasource->register($register);
-    }
 }
