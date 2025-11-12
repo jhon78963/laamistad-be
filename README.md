@@ -6,7 +6,7 @@ Se gestionará todo lo referente a la gestión de los usuarios de la ERP
 
 ## Comandos caché docker
 
-sudo chown -R www-data:www-data /var/www/html
+sudo chown -R www-data:www-data /var/www
 sudo chown -R $USER:www-data storage
 sudo chown -R www-data:www-data storage bootstrap/cache 
 sudo chown -R $USER:www-data bootstrap/cache 

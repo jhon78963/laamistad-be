@@ -27,8 +27,7 @@ final class UserController extends Controller
         }
 
         return response()->json([
-            'id' => $role->id,
-            'description' => $role->description,
+            'role' => $role->description,
         ]);
     }
 }
