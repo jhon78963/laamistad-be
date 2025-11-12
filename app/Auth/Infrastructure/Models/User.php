@@ -6,10 +6,19 @@ namespace App\Auth\Infrastructure\Models;
 
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
+/**
+ * @property int $id
+ * @property int $role_id
+ * @property string $email
+ * @property string $password
+ * @property string $name
+ * @property string $status
+ */
 final class User extends Authenticatable implements JWTSubject
 {
     use HasFactory, Notifiable, HasUuids;
@@ -20,6 +29,7 @@ final class User extends Authenticatable implements JWTSubject
      * @var list<string>
      */
     protected $fillable = [
+        'id',
         'email',
         'password',
         'name',
@@ -75,5 +85,15 @@ final class User extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims()
     {
         return [];
+    }
+
+    /**
+     * Get the role associated with the user.
+     *
+     * @return BelongsTo
+     */
+    public function role(): BelongsTo
+    {
+        return $this->belongsTo(Role::class);
     }
 }

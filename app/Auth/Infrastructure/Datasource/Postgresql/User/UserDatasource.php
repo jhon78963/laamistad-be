@@ -4,26 +4,31 @@ declare(strict_types=1);
 
 namespace App\Auth\Infrastructure\Datasource\Postgresql\User;
 
+use App\Auth\Domain\Entities\Role;
 use App\Auth\Domain\Entities\User;
 use App\Auth\Domain\ValueObjects\Email;
 use App\Auth\Domain\ValueObjects\UserId;
 use App\Auth\Infrastructure\Datasource\IUserDatasource;
 use App\Auth\Infrastructure\Datasource\Postgresql\User\Services\FindByEmailService;
+use App\Auth\Infrastructure\Datasource\Postgresql\User\Services\FindRoleByUserId;
 use App\Auth\Infrastructure\Datasource\Postgresql\User\Services\RegisterService;
 use App\Auth\Infrastructure\Datasource\Services\ResponseService;
 
 final class UserDatasource implements IUserDatasource
 {
     protected FindByEmailService $findByEmailService;
+    protected FindRoleByUserId $findRoleByUserId;
     protected RegisterService $registerService;
     protected ResponseService $responseService;
 
     public function __construct(
         FindByEmailService $findByEmailService,
+        FindRoleByUserId $findRoleByUserId,
         RegisterService $registerService,
         ResponseService $responseService,
     ) {
         $this->findByEmailService = $findByEmailService;
+        $this->findRoleByUserId = $findRoleByUserId;
         $this->registerService = $registerService;
         $this->responseService = $responseService;
     }
@@ -42,5 +47,10 @@ final class UserDatasource implements IUserDatasource
     {
         $userModel = $this->registerService->user($user);
         return $this->responseService->generateAccessTokenResponse($userModel);
+    }
+
+    public function findRoleByUserId(UserId $userId): ?Role
+    {
+        return $this->findRoleByUserId->getRole($userId);
     }
 }

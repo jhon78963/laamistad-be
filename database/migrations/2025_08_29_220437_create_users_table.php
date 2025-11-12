@@ -20,6 +20,8 @@ return new class extends Migration {
             $table->boolean('is_deleted')->default(false);
             $table->uuid('deleter_user_id')->nullable();
             $table->datetime('deletion_time')->nullable();
+            $table->uuid('role_id');
+            $table->foreign('role_id')->references('id')->on('roles');
             $table->string('email')->unique();
             $table->string('password');
             $table->string('name');

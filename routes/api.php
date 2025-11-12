@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Auth\Interfaces\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use App\Auth\Interfaces\Controllers\AuthController;
 
@@ -26,5 +27,14 @@ Route::prefix('v1')->name('api.v1.')->group(function () {
             // Route::post('refresh-token', 'refreshToken')->name('refresh-token');
             // Route::get('profile', 'getProfile')->name('profile.show');
             // Route::patch('profile', 'updateProfile')->name('profile.update');
+
+        });
+
+    Route::middleware('jwt')
+        ->controller(UserController::class)
+        ->prefix('auth')
+        ->name('auth.')
+        ->group(function () {
+            Route::post('/user/role', 'getRole');
         });
 });
